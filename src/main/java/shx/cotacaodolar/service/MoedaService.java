@@ -8,6 +8,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,4 +59,28 @@ public class MoedaService {
         return moedasLista;
     }
 
+
+    public Moeda getCotacaoAtual() throws IOException, ParseException {
+        //Date date = Date.from(Instant.now().plus(Duration.ofDays(1))); // para testes com dias futuros
+        Date date = Date.from(Instant.now());
+        String strDate = new SimpleDateFormat("MM-dd-yyyy").format(date);
+        List<Moeda> cotacoesPeriodo= getCotacoesPeriodo(strDate, strDate);
+
+        // no caso de se considerar a cotação atual como sendo a cotação do último fechamento
+        // como no caso da consulta ser feita aos finais de semana.
+        while(cotacoesPeriodo.isEmpty()){
+            date = Date.from(date.toInstant().minus(Duration.ofDays(1)));
+            strDate = new SimpleDateFormat("MM-dd-yyyy").format(date);
+            cotacoesPeriodo = getCotacoesPeriodo(strDate, strDate);
+        }
+
+        return cotacoesPeriodo.get(0);
+
+    }
+
+    public List<Moeda> getCotacoesMenoresAtual(String startDate, String endDate) throws IOException, ParseException {
+        List<Moeda> listaMoedas = getCotacoesPeriodo(startDate, endDate);
+        Moeda cotacaoAtual = getCotacaoAtual();
+        return listaMoedas.stream().filter(moeda -> moeda.preco < cotacaoAtual.preco).toList();
+    }
 }

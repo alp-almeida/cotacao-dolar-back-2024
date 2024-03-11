@@ -29,16 +29,18 @@ public class MoedaController {
     
     // Desenvolver uma rotina que retorna a cotação atual
     @GetMapping("/moeda/atual")
-    public List<Moeda> getCotacaoAtual() throws IOException, MalformedURLException, ParseException{
-        // return moedaService.getCotacaoAtual();
-        return null; // substituir pela chamada do método no service quando criado como está acima.
+    public Moeda getCotacaoAtual() throws IOException, MalformedURLException, ParseException{
+         return moedaService.getCotacaoAtual();
+
+         //27-11-23 4.8945
+        //return null; // substituir pela chamada do método no service quando criado como está acima.
     }
     
     // Desenvolver uma rotina que recebe um período e retorna uma lista de cotações, somente com as cotações menores que a cotação atual.
-    @GetMapping("/moeda/{data1}&{data2}")
+    @GetMapping("/moeda/menor-atual/{data1}&{data2}")
     public List<Moeda> getCotacoesMenoresAtual(@PathVariable("data1") String startDate, @PathVariable("data2") String endDate) throws IOException, MalformedURLException, ParseException{
-        // return moedaService.getCotacoesMenoresAtual(startDate, endDate);
-        return null; // substituir pela chamada do método no service quando criado como está acima.
+        return moedaService.getCotacoesMenoresAtual(startDate, endDate);
+        //return null; // substituir pela chamada do método no service quando criado como está acima.
     }
 
 }
